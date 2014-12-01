@@ -7,8 +7,8 @@
         <div id="wrapper">
             <div id="map">
             </div>
-            <div id="osm">©<a href="http://www.openstreetmap.org">OpenStreetMap</a>
-                und <a href="http://www.openstreetmap.org/copyright">Mitwirkende</a>,
+            <div id="osm">&copy;<a href="http://www.openstreetmap.org">OpenStreetMap</a> und
+                <a href="http://www.openstreetmap.org/copyright">Mitwirkende</a>,
                 <a href="http://creativecommons.org/licenses/by-sa/2.0/deed.de">CC-BY-SA</a>
             </div>
         </div>
@@ -27,9 +27,6 @@
         var layer_markers;
 
         function drawmap() {
-            // Popup und Popuptext mit evtl. Grafik
-            var popuptext="<font color=\"black\"><b>Thomas Heiles<br>Stra&szlig;e 123<br>54290 Trier</b><p><img src=\"test.jpg\" width=\"180\" height=\"113\"></p></font>";
-
             OpenLayers.Lang.setCode('de');
 
             // Position und Zoomstufe der Karte
@@ -59,8 +56,7 @@
             map.addLayers([layer_mapnik, layer_markers]);
             jumpTo(lon, lat, zoom);
 
-            // Position des Markers
-            addMarker(layer_markers, 6.641389, 49.756667, popuptext);
+
 
         }
         //]]>
