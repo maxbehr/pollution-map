@@ -1,7 +1,5 @@
 $(document).ready(function() {
     drawmap();
-    getJsonData();
-});
 
 function getJsonData() {
     $.ajax({
