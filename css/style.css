@@ -478,7 +478,6 @@
 }
 
 html, body {
-    background-color: #2B7CA2;
     color: #ffffff;
     font-family: Verdana,Arial,sans-serif;
     font-size: 1em;
@@ -490,7 +489,6 @@ html, body {
 }
 
 a {
-    color: #ffff00;
     text-decoration: none;
 }
 
@@ -506,8 +504,7 @@ a:hover {
 }
 
 #map {
-    height: 95%;
-    width: 88%;
+    height: 100%;
     padding: 0; margin: 0;
 }
 
@@ -516,17 +513,16 @@ a:hover {
 }
 
 #osm {
-    background-color: #2b7ca2;
     bottom: 0;
     font-size: 0.7em;
     font-style: italic;
     position: absolute;
     width: 100%;
     z-index: 9999999;
+    color: black;
 }
 
 #topbar {
-    background-color: hotpink;
     top: 0;
     font-size: 14px;
     position: absolute;
@@ -537,16 +533,46 @@ a:hover {
 }
 
 #sidebar {
-    background-color: #2b7ca2;
-    border-color: #aaa;
     font-size: 15px;
     height: 100%;
     padding: 3px;
     position: absolute;
     right: 0;
     top: 0;
-    width: 13%;
+    width: 300px;
     z-index: 9999999;
+    padding: 50px 40px 0 10px;
+    color: black;
+    overflow: auto;
+}
+
+#sidebar #results {
+	width: 100%;
+	height: 100%;
+	list-style-type: none;
+	padding: 0;
+}
+
+#sidebar #results li {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 2px;
+    box-shadow: 0 2px 20px #bbb;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 5px 8px;
+}
+
+#sidebar #results li h1 {
+    color: #666;
+    font-size: 1em;
+}
+
+#sidebar #results li table {
+    font-size: 10px;
+}
+
+#sidebar #results li td.key {
+    font-weight: bold;
 }
 
 #wrapper {
@@ -555,6 +581,5 @@ a:hover {
 }
 
 #substance-block {
-    visibility: hidden;
     margin: 12px;
 }

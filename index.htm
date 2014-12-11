@@ -1,23 +1,32 @@
 <!DOCTYPE html>
 <html>
     <head>
+		<meta charset='utf-8'>
+
         <link rel="stylesheet" type="text/css" href="css/style.css" />
     </head>
     <body>
         <div id="wrapper">
             <div id="topbar">
                 <div id="substance-block">
+					<strong>PollutionMap</strong>
+
                     Substance:
                     <select id="substance-selector"></select>
                 </div>
             </div>
-            <div id="map">
+
+            <div id="map"></div>
+
+            <div id="sidebar">
+				<ul id="results">	</ul>
             </div>
-            <div id="sidebar"></div>
+
             <div id="osm">&copy;<a href="http://www.openstreetmap.org">OpenStreetMap</a> und
                 <a href="http://www.openstreetmap.org/copyright">Mitwirkende</a>,
                 <a href="http://creativecommons.org/licenses/by-sa/2.0/deed.de">CC-BY-SA</a>
             </div>
+
         </div>
     </body>
     <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
@@ -37,8 +46,8 @@
             OpenLayers.Lang.setCode('de');
 
             // Position und Zoomstufe der Karte
-            var lon = 6.641389;
-            var lat = 49.756667;
+            var lon = 10.7952;
+            var lat = 51.4918;
             var zoom = 7;
 
             map = new OpenLayers.Map('map', {
@@ -66,6 +75,26 @@
 
 
         }
+
+	    function addMarker(lon, lat) {
+
+		    var lonLat = new OpenLayers.LonLat( lon, lat )
+		          .transform(
+		            new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+		            map.getProjectionObject() // to Spherical Mercator Projection
+		          );
+
+		    //var zoom = 16;
+
+		    var markers = new OpenLayers.Layer.Markers( "Address" );
+		    map.addLayer(markers);
+
+		    markers.addMarker(new OpenLayers.Marker(lonLat));
+
+		    //map.setCenter (lonLat, zoom);
+
+	    }
+
         //]]>
     </script>
 </html>
