@@ -6,6 +6,9 @@ $(document).ready(function() {
 	    var request = $.ajax({
 			url: "http://www.maxbehr.de/opendata/dataset.php?callback=?",
 			dataType: "jsonp",
+            data: {
+                limit: 100
+            },
 			success: function( data ) {
 
 
