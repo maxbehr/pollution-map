@@ -1,100 +1,58 @@
 <!DOCTYPE html>
 <html>
-    <head>
-		<meta charset='utf-8'>
+<head>
+    <meta charset='utf-8'>
 
-        <link rel="stylesheet" type="text/css" href="css/style.css" />
-    </head>
-    <body>
-        <div id="wrapper">
-            <div id="topbar">
-                <div id="substance-block">
-					<strong>PollutionMap</strong>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+</head>
+<body>
+<div id="wrapper">
+    <div id="topbar">
+        <div id="substance-block">
+            <strong>PollutionMap</strong>
 
-                    Substance:
-                    <select id="substance-selector"></select>
-                </div>
-            </div>
-
-            <div id="map"></div>
-
-            <div id="sidebar">
-				<ul id="results">	</ul>
-            </div>
-
-            <div id="osm">&copy;<a href="http://www.openstreetmap.org">OpenStreetMap</a> und
-                <a href="http://www.openstreetmap.org/copyright">Mitwirkende</a>,
-                <a href="http://creativecommons.org/licenses/by-sa/2.0/deed.de">CC-BY-SA</a>
-            </div>
-
+            Substance:
+            <select id="substance-selector"></select>
         </div>
-    </body>
-    <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
-    <script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"></script>
-    <script type="text/javascript" src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
-    <script type="text/javascript" src="js/tom.js"></script>
-    <script type="text/javascript" src="js/leaflet.js"></script>
-	<script type="text/javascript" src="js/script.js"></script>
-    <script type="text/javascript">
-        //<![CDATA[
-        var map;
-        var layer_mapnik;
-        var layer_tah;
-        var layer_markers;
+    </div>
 
-        function drawmap() {
-            OpenLayers.Lang.setCode('de');
+    <div id="map"></div>
 
-            // Position und Zoomstufe der Karte
-            var lon = 10.7952;
-            var lat = 51.4918;
-            var zoom = 7;
+    <div id="sidebar">
+        <ul id="results"></ul>
+    </div>
 
-            map = new OpenLayers.Map('map', {
-                projection: new OpenLayers.Projection("EPSG:900913"),
-                displayProjection: new OpenLayers.Projection("EPSG:4326"),
-                controls: [
-                    new OpenLayers.Control.Navigation(),
-                    new OpenLayers.Control.LayerSwitcher(),
-                    new OpenLayers.Control.PanZoomBar()],
-                maxExtent:
-                        new OpenLayers.Bounds(-20037508.34,-20037508.34,
-                                20037508.34, 20037508.34),
-                numZoomLevels: 18,
-                maxResolution: 156543,
-                units: 'meters'
-            });
+    <div id="osm">&copy;<a href="http://www.openstreetmap.org">OpenStreetMap</a> und
+        <a href="http://www.openstreetmap.org/copyright">Mitwirkende</a>,
+        <a href="http://creativecommons.org/licenses/by-sa/2.0/deed.de">CC-BY-SA</a>
+    </div>
 
-            layer_mapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
-            layer_markers = new OpenLayers.Layer.Markers("Address", { projection: new OpenLayers.Projection("EPSG:4326"),
-                visibility: true, displayInLayerSwitcher: false });
+</div>
+<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"></script>
+<script type="text/javascript" src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
+<script type="text/javascript" src="js/leaflet.js"></script>
+<script type="text/javascript" src="js/script.js"></script>
+<script type="text/javascript">
+    //<![CDATA[
+    var map;
+    var markers;
+    var clickedMarker;
+    var hoverId;
+    var results = [];
 
-            map.addLayers([layer_mapnik, layer_markers]);
-            jumpTo(lon, lat, zoom);
+    function drawmap() {
+        map = new L.Map('map');
+        var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+        var osm = new L.TileLayer(osmUrl, {minZoom: 6, attribution: osmAttrib});
+
+        map.setView(new L.LatLng(51.5, 10.8),7);
+        map.addLayer(osm);
+    }
 
 
-
-        }
-
-	    function addMarker(lon, lat) {
-
-		    var lonLat = new OpenLayers.LonLat( lon, lat )
-		          .transform(
-		            new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-		            map.getProjectionObject() // to Spherical Mercator Projection
-		          );
-
-		    //var zoom = 16;
-
-		    var markers = new OpenLayers.Layer.Markers( "Address" );
-		    map.addLayer(markers);
-
-		    markers.addMarker(new OpenLayers.Marker(lonLat));
-
-		    //map.setCenter (lonLat, zoom);
-
-	    }
-
-        //]]>
-    </script>
+    //]]>
+</script>
+</body>
 </html>

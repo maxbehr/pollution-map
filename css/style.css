@@ -493,7 +493,7 @@ a {
 }
 
 a:hover {
-    color: #ffff00;
+    color: #000;
     text-decoration: underline;
 }
 
@@ -535,7 +535,6 @@ a:hover {
 #sidebar {
     font-size: 15px;
     height: 100%;
-    padding: 3px;
     position: absolute;
     right: 0;
     top: 0;
@@ -555,12 +554,19 @@ a:hover {
 
 #sidebar #results li {
     background-color: rgba(255, 255, 255, 0.9);
+    transition: background-color 300ms linear;
     border-radius: 2px;
     box-shadow: 0 2px 20px #bbb;
     width: 100%;
     margin-bottom: 10px;
     padding: 5px 8px;
 }
+
+#sidebar #results .active {
+    background-color: rgba(223, 240, 255, 0.9) !important;
+    transition: background-color 300ms linear;
+}
+
 
 #sidebar #results li h1 {
     color: #666;
