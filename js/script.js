@@ -1,8 +1,11 @@
-$(document).ready(function () {
-    drawmap();
-    getJsonData();
+function Model() {
 
-    function getJsonData() {
+
+	this.results = [];
+
+	this.getJsonData = function( callback ) {
+		var that = this;
+
         var request = $.ajax({
             url: "http://www.maxbehr.de/opendata/dataset.php?callback=?",
             dataType: "jsonp",
@@ -11,14 +14,127 @@ $(document).ready(function () {
             },
             success: function (data) {
                 $.each(data, function (index_element, element) {
-                    results.push(element);
+                    that.results.push(element);
+                    console.log( element );
                 });
-                setTimeout(function() {updateElements();}, 500);
+
+                setTimeout(function() { callback( that.getResults() ); }, 500);
+
             }
         });
     }
 
-    function updateElements(){
+    this.getResults = function() {
+    	return this.results;
+    }
+
+    this.getSubstances = function() {
+
+    	var substances = [];
+
+    	var i = 0;
+    	$.each( this.results, function (index_element, element) {
+    		$.each(element.fracht, function (index_element, element) {
+    			if( element.stoff_name !== null && element.stoff_name.trim() !== "" && substances.indexOf( element.stoff_name ) === -1) {
+    				substances.push( element.stoff_name );
+    			}
+    			i++;
+    		});
+
+    	});
+
+		substances.sort();
+    	return substances;
+
+    };
+
+    this.getCompanies = function() {
+
+    	var companies = [];
+
+    	$.each( this.results, function (index_element, element) {
+    		if( element.name !== null && element.name.trim() !== "" && companies.indexOf( element.name ) === -1) {
+    			companies.push( element.name );
+    		}
+
+    	});
+
+    	companies.sort();
+    	return companies;
+
+    };
+
+
+    this.getStates = function() {
+
+    	var states = [];
+
+    	$.each( this.results, function (index_element, element) {
+    		if( element.bundesland !== null && element.bundesland.trim() !== "" && states.indexOf( element.bundesland ) === -1) {
+    			states.push( element.bundesland );
+    		}
+
+    	});
+
+    	states.sort();
+    	return states;
+
+    };
+
+}
+
+
+
+$(document).ready(function () {
+    drawmap();
+
+    var model = new Model();
+    model.getJsonData( init );
+
+    $('#search').on('click', function() {
+    	console.log("Search");
+    });
+
+	/**
+	 *	Initializes the entire page.
+	 */
+    function init() {
+    	updateSubstancesDropDown();
+    	updateCompaniesDropDown();
+    	updateElements( model.getResults() );
+    }
+
+	/**
+	 *	Updates the substances drop down with all fetched substance names.
+	 */
+    function updateSubstancesDropDown() {
+
+    	var substances = model.getSubstances();
+		var select = $('#substance-selector');
+		$.each(substances, function(val, text) {
+
+			select.append(
+		    	$('<option></option>').val(val).html(text)
+			);
+		});
+    }
+
+	/**
+	 *	Updates the company drop down with all fetched company names.
+	 */
+    function updateCompaniesDropDown() {
+
+    	var companies = model.getCompanies();
+		var select = $('#company-selector');
+		$.each(companies, function(val, text) {
+
+			select.append(
+		    	$('<option></option>').val(val).html(text)
+			);
+		});
+    }
+
+    function updateElements( results ){
         var resultBlock =  $('#results');
         markers = [];
 
