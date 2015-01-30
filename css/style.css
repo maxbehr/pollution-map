@@ -532,17 +532,40 @@ a:hover {
     color: #000;
 }
 
+
+html, body {
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size: 20px;
+}
+
+#filter {
+	font-weight: bold;
+	font-size: 13px;
+	margin-left: 30px;
+}
+
+#filter select {
+
+}
+
 #sidebar {
     font-size: 15px;
     height: 100%;
     position: absolute;
     right: 0;
-    top: 0;
-    width: 300px;
+    top: 10%;
+    width: 450px;
+    max-height: 700px;
+    min-height: 200px;
+    height: auto;
     z-index: 9999999;
-    padding: 50px 40px 0 10px;
+    padding: 0px 10px;
     color: black;
     overflow: auto;
+    background-color: rgba(255, 255, 255, 0.9);
+    transition: background-color 300ms linear;
+    border-radius: 2px;
+    display: none;
 }
 
 #sidebar #results {
@@ -550,6 +573,33 @@ a:hover {
 	height: 100%;
 	list-style-type: none;
 	padding: 0;
+	display: none;
+}
+
+#sidebar #resultText .head {
+	font-weight: bold;
+	cursor: pointer;
+}
+
+#sidebar #resultText .detail {
+	font-size: 0.8em;
+	color: #1e1e1e;
+	display: none;
+	background-color: #efefef;
+    padding: 10px;
+}
+
+#sidebar #resultText ul {
+	padding: 0;
+}
+
+#sidebar #resultText li {
+	width: 90%;
+	list-style: none;
+	display: block;
+	/* box-shadow: inset 0 0 10px #efefef; */
+	padding: 5px 10px;
+	margin-bottom: 3px;
 }
 
 #sidebar #results li {

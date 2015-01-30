@@ -10,12 +10,12 @@ function Model() {
             url: "http://www.maxbehr.de/opendata/dataset.php?callback=?",
             dataType: "jsonp",
             data: {
-                limit: 100
+                limit: 30
             },
             success: function (data) {
                 $.each(data, function (index_element, element) {
                     that.results.push(element);
-                    console.log( element );
+                    //console.log( element );
                 });
 
                 setTimeout(function() { callback( that.getResults() ); }, 500);
@@ -81,58 +81,318 @@ function Model() {
 
     };
 
+    this.findCompaniesInState = function( state ) {
+    	var companies = [];
+
+    	$.each( this.results, function (index_element, element) {
+    		if( element.bundesland !== null && element.bundesland.trim() !== "" && element.bundesland === state ) {
+    			companies.push( element );
+    		}
+
+    	});
+
+    	return companies;
+    }
+
+    this.findCompaniesForSubstance = function( substance ) {
+    	var companies = [];
+    	var that = this;
+
+    	$.each( this.results, function (index_element, element) {
+    		if( that.hasCompanySubstance( element, substance) ) {
+    				console.log("push");
+    				companies.push( element );
+    		}
+
+    	});
+
+    	return companies;
+    }
+
+    this.findSubstancesForCompany = function( company ) {
+
+    	var substances = [];
+
+    	$.each( this.results, function (index_element, element) {
+    		if( element.name !== null && element.name.trim() !== "" && element.name === company ) {
+    			substances.push( element );
+    		}
+
+    	});
+
+    	return substances;
+    }
+
+    this.hasCompanySubstance = function( company, substance ) {
+		console.log("Check " + company.name + " ("+ company.fracht.length +")" + " for " + substance);
+
+		var b = false;
+
+    	$.each(company.fracht, function( index, fracht ) {
+    		console.log(" ... has substance: " + fracht.stoff_name);
+
+			if( fracht.stoff_name == substance ) {
+				b = true;
+				return false;
+			}
+
+
+    	});
+
+    	return b;
+    }
+
+    this.getSubstanceElementsFromCompany = function( company, substance ) {
+		var substances = [];
+
+    	$.each(company.fracht, function( index, fracht ) {
+			if( fracht.stoff_name == substance ) {
+				substances.push( fracht );
+			}
+
+
+    	});
+
+    	return substances;
+    }
+
+}
+
+var FILTER = {
+	STATE : "Bundesland",
+	SUBSTANCE : "Stoff",
+	COMPANY : "Unternehmen"
 }
 
 
-
 $(document).ready(function () {
+
     drawmap();
 
     var model = new Model();
     model.getJsonData( init );
 
-    $('#search').on('click', function() {
-    	console.log("Search");
+    $('#filter-one').on('change', function() {
+    	updateFilterTwo();
+    	updateSidebar();
     });
+
+    $('#filter-two').on('change', function() {
+		updateSidebar();
+    });
+
+
+    function updateSidebar() {
+		console.log("Update result in sidebar")
+    	var selectedFilter = getFilterOneText();
+		var selectedFilter2 = getFilterTwoText();
+
+		var arr = [];
+
+		switch( selectedFilter ) {
+		    case FILTER.STATE:
+
+		    	var elements = model.findCompaniesInState( selectedFilter2 );
+				updateSidebarWithStateFilter( elements );
+		        break;
+
+		    case FILTER.SUBSTANCE:
+
+				var elements = model.findCompaniesForSubstance( selectedFilter2 );
+		        updateSidebarWithSubstanceFilter( elements );
+		        break;
+
+		    case FILTER.COMPANY:
+
+				var elements = model.findSubstancesForCompany( selectedFilter2 );
+				updateSidebarWithCompanyFilter( elements );
+		    	break;
+
+		    default:
+		        console.log("Nichts selektiert...")
+		}
+
+		$('#sidebar').fadeIn(500);
+    }
 
 	/**
 	 *	Initializes the entire page.
 	 */
     function init() {
-    	updateSubstancesDropDown();
-    	updateCompaniesDropDown();
-    	updateElements( model.getResults() );
+    	updateFilterOne();
+    	updateFilterTwo();
+    	updateSidebar();
+    	// updateElements( model.getResults() );
     }
 
 	/**
 	 *	Updates the substances drop down with all fetched substance names.
 	 */
-    function updateSubstancesDropDown() {
+    function updateFilterOne() {
 
-    	var substances = model.getSubstances();
-		var select = $('#substance-selector');
-		$.each(substances, function(val, text) {
+		var select = $('#filter-one');
+		$.each(FILTER, function(val, text) {
 
 			select.append(
 		    	$('<option></option>').val(val).html(text)
 			);
 		});
+
     }
 
 	/**
 	 *	Updates the company drop down with all fetched company names.
 	 */
-    function updateCompaniesDropDown() {
+    function updateFilterTwo() {
 
-    	var companies = model.getCompanies();
-		var select = $('#company-selector');
-		$.each(companies, function(val, text) {
+		var selectedFilter = getFilterOneText();
 
+		var arr = [];
+
+		switch( selectedFilter ) {
+		    case FILTER.STATE:
+		        arr = model.getStates();
+		        break;
+		    case FILTER.SUBSTANCE:
+		        arr = model.getSubstances();
+		        break;
+		    case FILTER.COMPANY:
+		    	arr = model.getCompanies();
+		    	break;
+		    default:
+		        console.log("Nichts selektiert...")
+		}
+
+		updateResultHeader( selectedFilter );
+
+		var select = $('#filter-two');
+		$(select).empty();
+		$.each(arr, function(val, text) {
+			console.log( text );
 			select.append(
 		    	$('<option></option>').val(val).html(text)
 			);
 		});
+
     }
+
+    /**
+		Updates the sidebar when the state filter is set.
+     */
+    function updateSidebarWithStateFilter( elements ) {
+    	console.log("updateSidebarWithStateFilter: " + elements.length + " elements");
+    	var f2 = getFilterTwoText();
+
+    	updateResultDescription( 'In <strong>'+ f2 +'</strong> haben folgende Unternehmen ihren Sitz:' );
+
+    	var t = $('<ul></ul>');
+    	//	Loop through elements
+    	$.each( elements, function( index, element ) {
+    		var li = createListItem();
+    		$(li).find('.head').html( '<i class="fa fa-building-o"></i> ' + element.name );
+    		$(li).find('.detail').html( '<p>'+ element.fracht.length +' ausgestoßene Stoffe</p><p>'+ element.anschrift +', '+ element.bundesland +'</p>' );
+
+    		$(t).append(li);
+    	});
+
+    	updateResultText( t );
+
+    }
+
+    /**
+		Updates the sidebar when the substance filter is set.
+     */
+    function updateSidebarWithSubstanceFilter( elements ) {
+    	console.log("updateSidebarWithSubstanceFilter: " + elements.length + " elements");
+		var f2 = getFilterTwoText();
+
+    	updateResultDescription( '<strong>'+ f2 +'</strong> wurde von folgenden Unternehmen ausgestoßen:' );
+
+    	var t = $('<ul></ul>');
+    	//	Loop through elements
+    	$.each( elements, function( index, element ) {
+    		var substances = model.getSubstanceElementsFromCompany( element, f2 );
+
+    		var li = createListItem();
+
+    		$(li).find('.head').html( '<i class="fa fa-building-o"></i> ' + element.name );
+
+    		var table = $('<table><tr><th>Jahr</th><th>Jahresfracht</th><th>versehentlich</th></tr></table>')
+			$(li).find('.detail').append( table );
+
+    		$.each(substances, function( index_substance, substance ) {
+    			var row = $('<tr><td>'+ substance.jahr +'</td><td>'+ substance.jahresfracht +'</td><td>'+ substance.jahresfracht_versehentlich +'</td></tr>');
+    			$(table).append(row);
+    		});
+
+			$(t).append(li);
+
+    	});
+
+    	updateResultText( t );
+
+    }
+
+    /**
+		Updates the sidebar when the company filter is set.
+     */
+    function updateSidebarWithCompanyFilter( elements ) {
+    	console.log("updateSidebarWithCompanyFilter: " + elements.length + " elements");
+    	var f2 = getFilterTwoText();
+
+    	updateResultDescription( 'Das Unternehmen <strong>'+ f2 +'</strong> hat folgende Schadstoffe ausgestoßen:' );
+
+    	var t = $('<ul></ul>');
+    	//	Loop through elements
+    	$.each( elements, function( index, element ) {
+    		$.each( element.fracht, function( index2, fracht ) {
+	    		var li = createListItem();
+	    		$(li).find('.head').html( '<i class="fa fa-chain-broken"></i> ' + fracht.stoff_name );
+	    		$(li).find('.detail').html( '<p>'+ fracht.jahr +'</p>' );
+
+	    		$(t).append(li);
+    		});
+    	});
+
+    	updateResultText( t );
+    }
+
+    function createListItem() {
+    	var li = $('<li></li>').html('<div class="head"></div><div class="detail"></div>');
+    	$(li).click( function() {
+    		$(li).find('.detail').slideToggle(300);
+    	});
+
+    	return li;
+    }
+
+    /**
+		Returns the value set in filter one.
+     */
+    function getFilterOneText() {
+    	return $('#filter-one').find(":selected").text();
+    }
+
+    /**
+		Returns the value set in filter two.
+     */
+    function getFilterTwoText() {
+    	return $('#filter-two').find(":selected").text();
+    }
+
+
+    function updateResultHeader( text ) {
+    	$('#sidebar h1#resultHeader').html( text );
+    }
+
+	function updateResultDescription( text ) {
+    	$('#sidebar p#resultDesc').html( text );
+    }
+
+	function updateResultText( text ) {
+    	$('#sidebar p#resultText').html( text );
+    }
+
 
     function updateElements( results ){
         var resultBlock =  $('#results');

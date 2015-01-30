@@ -4,6 +4,8 @@
     <meta charset='utf-8'>
 
     <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
 </head>
 <body>
 <div id="wrapper">
@@ -11,17 +13,12 @@
         <div id="substance-block">
             <strong>PollutionMap</strong>
 
-            Substance:
-            <select id="substance-selector"></select>
-
-            Company:
-            <select id="company-selector"></select>
-
-			Limit:
-            <input id="resultAmount" type="range" min="10" max="500" step="10" />
-            <span id="amount"></span>
-
-			<input type="button" id="search" />
+			<span id="filter">
+				Filter:
+				<select id="filter-one"></select>
+				<i class="fa fa-arrow-right"></i>
+	            <select id="filter-two"></select>
+			</span>
 
         </div>
     </div>
@@ -29,7 +26,13 @@
     <div id="map"></div>
 
     <div id="sidebar">
-        <ul id="results"></ul>
+		<h1 id="resultHeader">Header</h1>
+
+		<p id="resultDesc">Description</p>
+
+		<p id="resultText">Text</p>
+
+        <!-- <ul id="results"></ul> -->
     </div>
 
     <div id="osm">&copy;<a href="http://www.openstreetmap.org">OpenStreetMap</a> und
