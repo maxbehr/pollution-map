@@ -10,7 +10,7 @@ function Model() {
             url: "http://www.maxbehr.de/opendata/dataset.php?callback=?",
             dataType: "jsonp",
             data: {
-                limit: 30
+                limit: 100
             },
             success: function (data) {
                 $.each(data, function (index_element, element) {
@@ -100,7 +100,6 @@ function Model() {
 
     	$.each( this.results, function (index_element, element) {
     		if( that.hasCompanySubstance( element, substance) ) {
-    				console.log("push");
     				companies.push( element );
     		}
 
@@ -124,12 +123,10 @@ function Model() {
     }
 
     this.hasCompanySubstance = function( company, substance ) {
-		console.log("Check " + company.name + " ("+ company.fracht.length +")" + " for " + substance);
 
 		var b = false;
 
     	$.each(company.fracht, function( index, fracht ) {
-    		console.log(" ... has substance: " + fracht.stoff_name);
 
 			if( fracht.stoff_name == substance ) {
 				b = true;
@@ -194,22 +191,26 @@ $(document).ready(function () {
 
 		    	var elements = model.findCompaniesInState( selectedFilter2 );
 				updateSidebarWithStateFilter( elements );
+				updateElements( elements );
 		        break;
 
 		    case FILTER.SUBSTANCE:
 
 				var elements = model.findCompaniesForSubstance( selectedFilter2 );
 		        updateSidebarWithSubstanceFilter( elements );
+		        updateElements( elements );
 		        break;
 
 		    case FILTER.COMPANY:
 
 				var elements = model.findSubstancesForCompany( selectedFilter2 );
 				updateSidebarWithCompanyFilter( elements );
+				updateElements( elements );
 		    	break;
 
 		    default:
 		        console.log("Nichts selektiert...")
+
 		}
 
 		$('#sidebar').fadeIn(500);
@@ -268,7 +269,6 @@ $(document).ready(function () {
 		var select = $('#filter-two');
 		$(select).empty();
 		$.each(arr, function(val, text) {
-			console.log( text );
 			select.append(
 		    	$('<option></option>').val(val).html(text)
 			);
@@ -318,12 +318,20 @@ $(document).ready(function () {
     		$(li).find('.head').html( '<i class="fa fa-building-o"></i> ' + element.name );
 
     		var table = $('<table><tr><th>Jahr</th><th>Jahresfracht</th><th>versehentlich</th></tr></table>')
+
+    		$(li).find('.detail').html( '<p>Insgesamt gab es <strong>' + substances.length + ' Frachtaustöße</strong> von <strong>'+ f2 +'</strong></p>');
 			$(li).find('.detail').append( table );
 
+
+			var jahresfrachtGesamt = 0;
     		$.each(substances, function( index_substance, substance ) {
+    			jahresfrachtGesamt += (substance.jahresfracht !== null) ? parseInt( substance.jahresfracht ) : 0;
+
     			var row = $('<tr><td>'+ substance.jahr +'</td><td>'+ substance.jahresfracht +'</td><td>'+ substance.jahresfracht_versehentlich +'</td></tr>');
     			$(table).append(row);
     		});
+
+    		$(li).find('.detail').append( '<p><strong>Ausstoß insgesamt:</strong> ' + jahresfrachtGesamt + ' Einheiten</p>');
 
 			$(t).append(li);
 
@@ -337,7 +345,6 @@ $(document).ready(function () {
 		Updates the sidebar when the company filter is set.
      */
     function updateSidebarWithCompanyFilter( elements ) {
-    	console.log("updateSidebarWithCompanyFilter: " + elements.length + " elements");
     	var f2 = getFilterTwoText();
 
     	updateResultDescription( 'Das Unternehmen <strong>'+ f2 +'</strong> hat folgende Schadstoffe ausgestoßen:' );
@@ -348,7 +355,7 @@ $(document).ready(function () {
     		$.each( element.fracht, function( index2, fracht ) {
 	    		var li = createListItem();
 	    		$(li).find('.head').html( '<i class="fa fa-chain-broken"></i> ' + fracht.stoff_name );
-	    		$(li).find('.detail').html( '<p>'+ fracht.jahr +'</p>' );
+	    		$(li).find('.detail').html( '<p><strong>'+ fracht.jahr +'</strong> wurden <strong>'+ fracht.jahresfracht +'</strong> Einheiten ausgestoßen. Davon waren <strong>'+ fracht.jahresfracht_versehentlich +'</strong> Einheiten versehentlich.</p>' );
 
 	    		$(t).append(li);
     		});
