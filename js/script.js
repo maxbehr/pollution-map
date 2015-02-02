@@ -317,7 +317,7 @@ $(document).ready(function () {
 
     		$(li).find('.head').html( '<i class="fa fa-building-o"></i> ' + element.name );
 
-    		var table = $('<table><tr><th>Jahr</th><th>Jahresfracht</th><th>versehentlich</th></tr></table>')
+    		var table = $('<table><tr><th>Jahr</th><th>Kompartiment</th><th>Jahresfracht</th><th>versehentlich</th></tr></table>')
 
     		$(li).find('.detail').html( '<p>Insgesamt gab es <strong>' + substances.length + ' Frachtaustöße</strong> von <strong>'+ f2 +'</strong></p>');
 			$(li).find('.detail').append( table );
@@ -327,11 +327,11 @@ $(document).ready(function () {
     		$.each(substances, function( index_substance, substance ) {
     			jahresfrachtGesamt += (substance.jahresfracht !== null) ? parseInt( substance.jahresfracht ) : 0;
 
-    			var row = $('<tr><td>'+ substance.jahr +'</td><td>'+ substance.jahresfracht +'</td><td>'+ substance.jahresfracht_versehentlich +'</td></tr>');
+    			var row = $('<tr><td>'+ substance.jahr +'</td><td>'+ substance.kompartiment +'</td><td>'+ substance.jahresfracht +'</td><td>'+ substance.jahresfracht_versehentlich +'</td></tr>');
     			$(table).append(row);
     		});
 
-    		$(li).find('.detail').append( '<p><strong>Ausstoß insgesamt:</strong> ' + jahresfrachtGesamt + ' Einheiten</p>');
+    		$(li).find('.detail').append( '<p><strong>Ausstoß insgesamt:</strong> ' + jahresfrachtGesamt + ' kg/a</p>');
 
 			$(t).append(li);
 
@@ -355,7 +355,7 @@ $(document).ready(function () {
     		$.each( element.fracht, function( index2, fracht ) {
 	    		var li = createListItem();
 	    		$(li).find('.head').html( '<i class="fa fa-chain-broken"></i> ' + fracht.stoff_name );
-	    		$(li).find('.detail').html( '<p><strong>'+ fracht.jahr +'</strong> wurden <strong>'+ fracht.jahresfracht +'</strong> Einheiten ausgestoßen. Davon waren <strong>'+ fracht.jahresfracht_versehentlich +'</strong> Einheiten versehentlich.</p>' );
+	    		$(li).find('.detail').html( '<p><strong>'+ fracht.jahr +'</strong> wurden <strong>'+ fracht.jahresfracht +'</strong> kg/a ausgestoßen. Davon waren <strong>'+ fracht.jahresfracht_versehentlich +'</strong> kg/a versehentlich.</p>' );
 
 	    		$(t).append(li);
     		});
