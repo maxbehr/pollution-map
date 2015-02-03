@@ -287,8 +287,8 @@ $(document).ready(function () {
 
     	var t = $('<ul></ul>');
     	//	Loop through elements
-    	$.each( elements, function( index, element ) {
-    		var li = createListItem();
+    	$.each( elements, function(index, element) {
+    		var li = createListItem(element.id);
     		$(li).find('.head').html( '<i class="fa fa-building-o"></i> ' + element.name );
     		$(li).find('.detail').html( '<p>'+ element.fracht.length +' ausgestoßene Stoffe</p><p>'+ element.anschrift +', '+ element.bundesland +'</p>' );
 
@@ -313,7 +313,7 @@ $(document).ready(function () {
     	$.each( elements, function( index, element ) {
     		var substances = model.getSubstanceElementsFromCompany( element, f2 );
 
-    		var li = createListItem();
+    		var li = createListItem(element.id);
 
     		$(li).find('.head').html( '<i class="fa fa-building-o"></i> ' + element.name );
 
@@ -353,7 +353,7 @@ $(document).ready(function () {
     	//	Loop through elements
     	$.each( elements, function( index, element ) {
     		$.each( element.fracht, function( index2, fracht ) {
-	    		var li = createListItem();
+	    		var li = createListItem(element.id);
 	    		$(li).find('.head').html( '<i class="fa fa-chain-broken"></i> ' + fracht.stoff_name );
 	    		$(li).find('.detail').html( '<p><strong>'+ fracht.jahr +'</strong> wurden <strong>'+ fracht.jahresfracht +'</strong> Einheiten ausgestoßen. Davon waren <strong>'+ fracht.jahresfracht_versehentlich +'</strong> Einheiten versehentlich.</p>' );
 
@@ -364,8 +364,8 @@ $(document).ready(function () {
     	updateResultText( t );
     }
 
-    function createListItem() {
-    	var li = $('<li></li>').html('<div class="head"></div><div class="detail"></div>');
+    function createListItem(id) {
+    	var li = $('<li id="' + id + '"></li>').html('<div class="head"></div><div class="detail"></div>');
     	$(li).click( function() {
     		$(li).find('.detail').slideToggle(300);
     	});
@@ -402,61 +402,50 @@ $(document).ready(function () {
 
 
     function updateElements( results ){
-        var resultBlock =  $('#results');
         markers = [];
+        $.each(results, function (index_element, element) {
+            var currentMarker = L.marker([element.wgs84_y, element.wgs84_x]);
+            currentMarker.addTo(map);
+            markers[element.id] = currentMarker;
+        });
 
-        resultBlock.fadeOut("slow", function() {
-            resultBlock.empty();
-            $.each(results, function (index_element, element) {
-                var currentMarker = L.marker([element.wgs84_y, element.wgs84_x]);
-                currentMarker.addTo(map);
-                markers[element.id] = currentMarker;
-
-                var elem = createResult(element);
-                resultBlock.append(elem);
-            });
-            $('#results').fadeIn("slow");
-
-
-            $("#results li").on( "mouseenter", function(event) {
-                    hoverId = $(this).attr('id');
-                    if (!clickedMarker) {
-                        markers[hoverId].bindPopup("<b>Hello world!</b><br>I am a popup."); //TODO: Remove this part here, popup content needs to be assigned somewhere else, probably when the marker is set.
-                        markers[hoverId].openPopup();
-                        $("#results #" + hoverId).addClass('active');
-                    }
-            });
-
-            $("#results li").on( "mouseleave", function(event) {
+        $("#sidebar li").on( "mouseenter", function(event) {
+                hoverId = $(this).attr('id');
                 if (!clickedMarker) {
-                    markers[hoverId].closePopup();
-                    $("#results #" + hoverId).removeClass('active');
-                    hoverId = null;
-                }
-            });
-
-            $("#results li a").on( "click", function(event) {
-                event.stopPropagation();
-                var parentId = $(this).parent().attr('id')
-                if (parentId == clickedMarker) {
-                    clickedMarker = null;
-                } else {
-                    if (clickedMarker) {
-                        //markers[clickedMarker].closePopup();
-                        $("#results #" + clickedMarker).removeClass('active');
-                    }
                     markers[hoverId].bindPopup("<b>Hello world!</b><br>I am a popup."); //TODO: Remove this part here, popup content needs to be assigned somewhere else, probably when the marker is set.
-                    markers[parentId].openPopup();
-                    $("#results #" + parentId).addClass('active');
-                    clickedMarker = parentId;
+                    markers[hoverId].openPopup();
+                    $("#results #" + hoverId).addClass('active');
                 }
-            });
+        });
 
-            map.on('popupclose', function(e) {
+        $("#sidebar li").on( "mouseleave", function(event) {
+            if (!clickedMarker) {
+                markers[hoverId].closePopup();
+                $("#results #" + hoverId).removeClass('active');
+                hoverId = null;
+            }
+        });
+
+        $("#sidebar li").on( "click", function(event) {
+            event.stopPropagation();
+            var parentId = $(this).parent().attr('id')
+            if (parentId == clickedMarker) {
                 clickedMarker = null;
-                $("#results li").removeClass('active');
-            });
+            } else {
+                if (clickedMarker) {
+                    //markers[clickedMarker].closePopup();
+                    $("#results #" + clickedMarker).removeClass('active');
+                }
+                markers[hoverId].bindPopup("<b>Hello world!</b><br>I am a popup."); //TODO: Remove this part here, popup content needs to be assigned somewhere else, probably when the marker is set.
+                markers[parentId].openPopup();
+                $("#results #" + parentId).addClass('active');
+                clickedMarker = parentId;
+            }
+        });
 
+        map.on('popupclose', function(e) {
+            clickedMarker = null;
+            $("#results li").removeClass('active');
         });
     }
 
