@@ -335,7 +335,7 @@ $(document).ready(function () {
 
     		$(li).find('.head').html( '<i class="fa fa-building-o"></i> ' + element.name );
 
-    		var table = $('<table><tr><th>Jahr</th><th>Kompartiment</th><th>Jahresfracht</th><th>versehentlich</th></tr></table>')
+    		var table = $('<table class="table table-bordered table-striped"><tr><th>Jahr</th><th>Kompartiment</th><th>Jahresfracht</th><th>versehentlich</th></tr></table>')
 
     		$(li).find('.detail').html( '<p>Insgesamt gab es <strong>' + substances.length + ' Frachtaustöße</strong> von <strong>'+ f2 +'</strong></p>');
 			$(li).find('.detail').append( table );
@@ -424,7 +424,7 @@ $(document).ready(function () {
             clearTimeout(timeout);
             timeout = setTimeout(function() {
                 var hoverElem = $('#'+hoverId);
-                sidebar.animate({scrollTop: (sidebar.scrollTop() + hoverElem.offset().top - (hoverElem.height() + 50)) },300);
+                sidebar.animate({scrollTop: (sidebar.scrollTop() + hoverElem.offset().top - (hoverElem.height() + 60)) },300);
             }, 500);
         }
     }
@@ -453,8 +453,8 @@ $(document).ready(function () {
             clickedMarker = currentId;
             timeout = setTimeout(function() {
                 var clickedElem = $("#" + clickedMarker);
-                sidebar.animate({scrollTop: (sidebar.scrollTop() + clickedElem.offset().top - (clickedElem.height() + 50)) },300);
-            }, 500);
+                sidebar.animate({scrollTop: (sidebar.scrollTop() + clickedElem.offset().top - (clickedElem.height() + 60)) },300);
+            }, 600);
         }
     }
 

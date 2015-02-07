@@ -487,6 +487,10 @@ html, body {
     width: 100%;
 }
 
+h1 {
+	margin-bottom: 24px;
+}
+
 a {
     text-decoration: none;
 }
@@ -533,12 +537,6 @@ a:hover {
 
 }
 
-
-html, body {
-	font-family: Verdana, Helvetica, sans-serif;
-	font-size: 20px;
-}
-
 #filter {
 	font-weight: bold;
 	font-size: 13px;
@@ -556,7 +554,7 @@ html, body {
     box-shadow: 0 0 10px #b3b0b0;
     display: none;
     font-size: 14px;
-    height: 100px;
+    height: 110px;
     padding: 0 10px;
     position: absolute;
     right: 50px;
@@ -567,20 +565,22 @@ html, body {
 
 #descBox h1 {
     line-height: 15px;
+    font-weight: bold;
+    font-size: 24px;
 }
 
 #sidebar {
     border-radius: 2px;
     display: none;
     font-size: 15px;
-    height: auto;
-    max-height: 85%;
+    height: 80%;
+    max-height: 80%;
     min-height: 200px;
     overflow: auto;
     padding: 0 10px;
     position: absolute;
     right: 0;
-    top: 160px;
+    top: 170px;
     transition: background-color 300ms linear 0s;
     width: 450px;
     z-index: 9999999;
@@ -590,12 +590,21 @@ html, body {
 #sidebar #resultText .detail {
 	font-size: 0.8em;
 	color: #1e1e1e;
-	display: block;
 	background-color: #efefef;
-    padding: 0;
+    padding: 10px;
     max-height: 0;
     transition: max-height 0.8s;
     overflow: hidden;
+    visibility: hidden;
+}
+#sidebar #resultText .detail.active {
+    max-height: 500px;
+    transition: max-height 0.8s;
+    overflow-y: scroll;
+    visibility: visible;
+}
+#sidebar #resultText .detail table {
+	font-size: 0.8em;
 }
 
 
@@ -603,11 +612,7 @@ html, body {
     padding-bottom: 10px;
 }
 
-#sidebar #resultText .detail.active {
-    max-height: 200px;
-    transition: max-height 0.8s;
-    padding: 10px;
-}
+
 
 #sidebar #resultText ul {
 	padding: 0;
