@@ -159,7 +159,7 @@ var FILTER = {
 	STATE : "Bundesland",
 	SUBSTANCE : "Stoff",
 	COMPANY : "Unternehmen"
-}
+};
 
 
 $(document).ready(function () {
@@ -180,7 +180,6 @@ $(document).ready(function () {
 
 
     function updateSidebar() {
-		console.log("Update result in sidebar")
     	var selectedFilter = getFilterOneText();
 		var selectedFilter2 = getFilterTwoText();
 
@@ -209,11 +208,13 @@ $(document).ready(function () {
 		    	break;
 
 		    default:
-		        console.log("Nichts selektiert...")
+		        console.log("Nichts selektiert...");
+                break;
 
 		}
 
 		$('#sidebar').fadeIn(500);
+        $('#descBox').fadeIn(500);
     }
 
 	/**
@@ -285,7 +286,7 @@ $(document).ready(function () {
 
     	updateResultDescription( 'In <strong>'+ f2 +'</strong> haben folgende Unternehmen ihren Sitz:' );
 
-    	var t = $('<ul></ul>');
+    	var t = $('<ul id="results"></ul>');
     	//	Loop through elements
     	$.each( elements, function(index, element) {
     		var li = createListItem(element.id);
@@ -308,7 +309,7 @@ $(document).ready(function () {
 
     	updateResultDescription( '<strong>'+ f2 +'</strong> wurde von folgenden Unternehmen ausgestoßen:' );
 
-    	var t = $('<ul></ul>');
+    	var t = $('<ul id="results"></ul>');
     	//	Loop through elements
     	$.each( elements, function( index, element ) {
     		var substances = model.getSubstanceElementsFromCompany( element, f2 );
@@ -349,7 +350,7 @@ $(document).ready(function () {
 
     	updateResultDescription( 'Das Unternehmen <strong>'+ f2 +'</strong> hat folgende Schadstoffe ausgestoßen:' );
 
-    	var t = $('<ul></ul>');
+    	var t = $('<ul id="results"></ul>');
     	//	Loop through elements
     	$.each( elements, function( index, element ) {
     		$.each( element.fracht, function( index2, fracht ) {
@@ -366,10 +367,6 @@ $(document).ready(function () {
 
     function createListItem(id) {
     	var li = $('<li id="' + id + '"></li>').html('<div class="head"></div><div class="detail"></div>');
-    	$(li).click( function() {
-    		$(li).find('.detail').slideToggle(300);
-    	});
-
     	return li;
     }
 
@@ -389,68 +386,102 @@ $(document).ready(function () {
 
 
     function updateResultHeader( text ) {
-    	$('#sidebar h1#resultHeader').html( text );
+    	$('#resultHeader').html( text );
     }
 
 	function updateResultDescription( text ) {
-    	$('#sidebar p#resultDesc').html( text );
+    	$('#resultDesc').html( text );
     }
 
 	function updateResultText( text ) {
     	$('#sidebar p#resultText').html( text );
     }
 
+    function markerEnter() {
+        hoverId = this.id;
+        if (!clickedMarker) {
+            markers[hoverId].openPopup();
+            $("#results #" + hoverId + ' .detail').addClass('active');
+            clearTimeout(timeout);
+            timeout = setTimeout(function() {
+                $('#sidebar').scrollTo('#'+hoverId, {duration:300});
+            }, 500);
+        }
+    }
+    function markerLeave() {
+        if (!clickedMarker) {
+            markers[hoverId].closePopup();
+            $("#results #" + hoverId + ' .detail').removeClass('active');
+            hoverId = null;
+        }
+    }
+
+    function markerClick() {
+        var currentId = this.id;
+        if (currentId == clickedMarker) {
+            $("#results #" + clickedMarker).removeClass('clicked');
+            clickedMarker = null;
+        } else {
+            if (clickedMarker) {
+                $("#results #" + clickedMarker + ' .detail').removeClass('active');
+                $("#results #" + clickedMarker).removeClass('clicked');
+            }
+            markers[currentId].openPopup();
+            $("#results #" + currentId + ' .detail').addClass('active');
+            $("#results #" + currentId).addClass('clicked');
+            clickedMarker = currentId;
+            timeout = setTimeout(function() {
+                $('#sidebar').scrollTo('#'+clickedMarker, {duration:300});
+            }, 500);
+        }
+    }
 
     function updateElements( results ){
         markers = [];
         $.each(results, function (index_element, element) {
             var currentMarker = L.marker([element.wgs84_y, element.wgs84_x]);
             currentMarker.addTo(map);
+            currentMarker.bindPopup("<b>Hello world!</b><br>I am a popup.", {offset: new L.Point(0, -40), closeButton: false});
+            currentMarker.on('mouseover', markerEnter);
+            currentMarker.on('mouseout', markerLeave);
+            currentMarker.on('click', markerClick);
+            currentMarker.id = element.id;
             markers[element.id] = currentMarker;
         });
 
         $("#sidebar li").on( "mouseenter", function(event) {
                 hoverId = $(this).attr('id');
                 if (!clickedMarker) {
-                    markers[hoverId].bindPopup("<b>Hello world!</b><br>I am a popup."); //TODO: Remove this part here, popup content needs to be assigned somewhere else, probably when the marker is set.
                     markers[hoverId].openPopup();
-                    $("#results #" + hoverId).addClass('active');
+                    $("#results #" + hoverId + ' .detail').addClass('active');
                 }
         });
 
         $("#sidebar li").on( "mouseleave", function(event) {
             if (!clickedMarker) {
                 markers[hoverId].closePopup();
-                $("#results #" + hoverId).removeClass('active');
+                $("#results #" + hoverId + ' .detail').removeClass('active');
                 hoverId = null;
             }
         });
 
         $("#sidebar li").on( "click", function(event) {
             event.stopPropagation();
-            var parentId = $(this).parent().attr('id')
-            if (parentId == clickedMarker) {
+            var currentId = $(this).attr('id');
+            if (currentId == clickedMarker) {
+                $("#results #" + clickedMarker).removeClass('clicked');
                 clickedMarker = null;
             } else {
                 if (clickedMarker) {
-                    //markers[clickedMarker].closePopup();
-                    $("#results #" + clickedMarker).removeClass('active');
+                    $("#results #" + clickedMarker + ' .detail').removeClass('active');
+                    $("#results #" + clickedMarker).removeClass('clicked');
                 }
-                markers[hoverId].bindPopup("<b>Hello world!</b><br>I am a popup."); //TODO: Remove this part here, popup content needs to be assigned somewhere else, probably when the marker is set.
-                markers[parentId].openPopup();
-                $("#results #" + parentId).addClass('active');
-                clickedMarker = parentId;
+                markers[currentId].openPopup();
+                $("#results #" + currentId + ' .detail').addClass('active');
+                $("#results #" + currentId).addClass('clicked');
+                clickedMarker = currentId;
             }
         });
-
-        map.on('popupclose', function(e) {
-            clickedMarker = null;
-            $("#results li").removeClass('active');
-        });
-    }
-
-    function createResult(element) {
-        return '<li id="' + element.id + '"><a href="#"><h1>' + element.name + '</h1></a><table><tr> <td class="key">Bundesland:</td> <td>' + element.bundesland + '</td> </tr> </table> </li>';
     }
 });
 

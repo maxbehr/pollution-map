@@ -25,14 +25,12 @@
 
     <div id="map"></div>
 
+    <div id="descBox">
+        <h1 id="resultHeader">Header</h1>
+        <p id="resultDesc">Description</p>
+    </div>
     <div id="sidebar">
-		<h1 id="resultHeader">Header</h1>
-
-		<p id="resultDesc">Description</p>
-
 		<p id="resultText">Text</p>
-
-        <!-- <ul id="results"></ul> -->
     </div>
 
     <div id="osm">&copy;<a href="http://www.openstreetmap.org">OpenStreetMap</a> und
@@ -52,10 +50,11 @@
     var markers;
     var clickedMarker;
     var hoverId;
+    var timeout;
     var results = [];
 
     function drawmap() {
-        map = new L.Map('map');
+        map = new L.Map('map', {closePopupOnClick:false});
         var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
         var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
         var osm = new L.TileLayer(osmUrl, {minZoom: 6, attribution: osmAttrib});
