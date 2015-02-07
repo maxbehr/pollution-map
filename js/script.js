@@ -404,7 +404,7 @@ $(document).ready(function () {
             $("#results #" + hoverId + ' .detail').addClass('active');
             clearTimeout(timeout);
             timeout = setTimeout(function() {
-                $('#sidebar').scrollTo('#'+hoverId, {duration:300});
+                $('#sidebar').scrollTo('#'+hoverId, {duration:300, offset:-15});
             }, 500);
         }
     }
@@ -431,7 +431,7 @@ $(document).ready(function () {
             $("#results #" + currentId).addClass('clicked');
             clickedMarker = currentId;
             timeout = setTimeout(function() {
-                $('#sidebar').scrollTo('#'+clickedMarker, {duration:300});
+                $('#sidebar').scrollTo('#'+clickedMarker, {duration:300, offset:-15});
             }, 500);
         }
     }
