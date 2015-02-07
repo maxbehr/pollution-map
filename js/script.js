@@ -422,7 +422,7 @@ $(document).ready(function () {
 
     var sidebar = $('#sidebar');
 
-    function markerEnter() {
+        function markerEnter() {
         hoverId = this.id;
         if (!clickedMarker) {
             markers[hoverId].openPopup();
@@ -467,9 +467,9 @@ $(document).ready(function () {
     function updateElements( results ){
         markers = [];
         $.each(results, function (index_element, element) {
-            var currentMarker = L.marker([element.wgs84_y, element.wgs84_x]);
+            var currentMarker = L.marker([element.wgs84_y, element.wgs84_x], {icon: getIcon(element.bundesland)});
             currentMarker.addTo(map);
-            currentMarker.bindPopup("<b>Hello world!</b><br>I am a popup.", {offset: new L.Point(0, -40), closeButton: false});
+            currentMarker.bindPopup("<b>Hello world!</b><br>I am a popup.", {offset: new L.Point(0, -20), closeButton: false});
             currentMarker.on('mouseover', markerEnter);
             currentMarker.on('mouseout', markerLeave);
             currentMarker.on('click', markerClick);
@@ -510,6 +510,183 @@ $(document).ready(function () {
                 clickedMarker = currentId;
             }
         });
+    }
+
+    function getIcon(bundesland) {
+        var icon = null;
+        switch (bundesland) {
+            case 'Bayern':
+                icon = L.icon({
+                    iconUrl: 'js/images/bayern.png',
+                    shadowUrl: 'js/images/marker-shadow.png',
+                    iconSize: [30, 39],
+                    shadowSize: [41, 41],
+                    iconAnchor:   [15, 0],
+                    shadowAnchor: [4, 1]
+                });
+                break;
+            case 'Berlin':
+                icon = L.icon({
+                    iconUrl: 'js/images/berlin.png',
+                    shadowUrl: 'js/images/marker-shadow.png',
+                    iconSize: [30, 49],
+                    shadowSize: [41, 41],
+                    iconAnchor:   [15, 0],
+                    shadowAnchor: [4, 1]
+                });
+                break;
+            case 'Brandenburg':
+                icon = L.icon({
+                    iconUrl: 'js/images/brandenburg.png',
+                    shadowUrl: 'js/images/marker-shadow.png',
+                    iconSize: [35, 41],
+                    shadowSize: [41, 41],
+                    iconAnchor:   [17, 0],
+                    shadowAnchor: [2, 1]
+                });
+                break;
+            case 'Bremen':
+                icon = L.icon({
+                    iconUrl: 'js/images/bremen.png',
+                    shadowUrl: 'js/images/marker-shadow.png',
+                    iconSize: [35, 47],
+                    shadowSize: [41, 41],
+                    iconAnchor:   [17, 0],
+                    shadowAnchor: [2, 0]
+                });
+                break;
+            case 'Baden-Württemberg':
+                icon = L.icon({
+                    iconUrl: 'js/images/bw.png',
+                    shadowUrl: 'js/images/marker-shadow.png',
+                    iconSize: [30, 41],
+                    shadowSize: [41, 41],
+                    iconAnchor:   [15, 0],
+                    shadowAnchor: [4, 1]
+                });
+                break;
+            case 'Hamburg':
+                icon = L.icon({
+                    iconUrl: 'js/images/hamburg.png',
+                    shadowUrl: 'js/images/marker-shadow.png',
+                    iconSize: [31, 43],
+                    shadowSize: [41, 41],
+                    iconAnchor:   [15, 0],
+                    shadowAnchor: [4, 1]
+                });
+                break;
+            case 'Hessen':
+                icon = L.icon({
+                    iconUrl: 'js/images/hessen.png',
+                    shadowUrl: 'js/images/marker-shadow.png',
+                    iconSize: [35, 42],
+                    shadowSize: [41, 41],
+                    iconAnchor:   [15, 0],
+                    shadowAnchor: [4, 1]
+                });
+                break;
+            case 'Mecklenburg-Vorpommern':
+                icon = L.icon({
+                    iconUrl: 'js/images/mv.png',
+                    shadowUrl: 'js/images/marker-shadow.png',
+                    iconSize: [40, 43],
+                    shadowSize: [41, 41],
+                    iconAnchor:   [15, 0],
+                    shadowAnchor: [4, 1]
+                });
+                break;
+            case 'Niedersachsen':
+                icon = L.icon({
+                    iconUrl: 'js/images/niedersachsen.png',
+                    shadowUrl: 'js/images/marker-shadow.png',
+                    iconSize: [36, 41],
+                    shadowSize: [41, 41],
+                    iconAnchor:   [15, 0],
+                    shadowAnchor: [4, 1]
+                });
+                break;
+            case 'Nordrhein-Westfalen':
+                icon = L.icon({
+                    iconUrl: 'js/images/nrw.png',
+                    shadowUrl: 'js/images/marker-shadow.png',
+                    iconSize: [36, 41],
+                    shadowSize: [41, 41],
+                    iconAnchor:   [15, 0],
+                    shadowAnchor: [4, 1]
+                });
+                break;
+            case 'Rheinland-Pfalz':
+                icon = L.icon({
+                    iconUrl: 'js/images/rp.png',
+                    shadowUrl: 'js/images/marker-shadow.png',
+                    iconSize: [34, 42],
+                    shadowSize: [41, 41],
+                    iconAnchor:   [15, 0],
+                    shadowAnchor: [4, 1]
+                });
+                break;
+            case 'Saarland':
+                icon = L.icon({
+                    iconUrl: 'js/images/saarland.png',
+                    shadowUrl: 'js/images/marker-shadow.png',
+                    iconSize: [35, 43],
+                    shadowSize: [41, 41],
+                    iconAnchor:   [15, 0],
+                    shadowAnchor: [4, 1]
+                });
+                break;
+            case 'Sachsen':
+                icon = L.icon({
+                    iconUrl: 'js/images/sachsen.png',
+                    shadowUrl: 'js/images/marker-shadow.png',
+                    iconSize: [36, 40],
+                    shadowSize: [41, 41],
+                    iconAnchor:   [15, 0],
+                    shadowAnchor: [4, 1]
+                });
+                break;
+            case 'Sachsen-Anhalt':
+                icon = L.icon({
+                    iconUrl: 'js/images/sachsenanhalt.png',
+                    shadowUrl: 'js/images/marker-shadow.png',
+                    iconSize: [35, 42],
+                    shadowSize: [41, 41],
+                    iconAnchor:   [15, 0],
+                    shadowAnchor: [4, 1]
+                });
+                break;
+            case 'Schleswig-Holstein':
+                icon = L.icon({
+                    iconUrl: 'js/images/sh.png',
+                    shadowUrl: 'js/images/marker-shadow.png',
+                    iconSize: [35, 41],
+                    shadowSize: [41, 41],
+                    iconAnchor:   [15, 0],
+                    shadowAnchor: [4, 1]
+                });
+                break;
+            case 'Thürigen':
+                icon = L.icon({
+                    iconUrl: 'js/images/th.png',
+                    shadowUrl: 'js/images/marker-shadow.png',
+                    iconSize: [35, 41],
+                    shadowSize: [41, 41],
+                    iconAnchor:   [15, 0],
+                    shadowAnchor: [4, 1]
+                });
+                break;
+            default:
+                icon = L.icon({
+                    iconUrl: 'js/images/marker-icon.png',
+                    shadowUrl: 'js/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    shadowSize: [41, 41],
+                    iconAnchor:   [12, 0],
+                    shadowAnchor: [12, 0]
+                });
+                break;
+        }
+        return icon;
     }
 });
 
