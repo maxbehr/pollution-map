@@ -233,27 +233,9 @@ $(document).ready(function () {
 	 *	Initializes the entire page.
 	 */
     function init( results ) {
-    	updateFilterOne();
     	updateFilterTwo();
     	updateSidebar();
     	// updateElements( model.getResults() );
-    }
-
-	/**
-	 *	Updates the substances drop down with all fetched substance names.
-	 */
-    function updateFilterOne() {
-		var select = $('#filterOne').find('ul');
-		$.each(FILTER, function(val, text) {
-
-			var e = $('<a href="#"></a>').val(val).html(text);
-
-			$(select).append(
-		    	$('<li></li>').append(e)
-			);
-		});
-
-
     }
 
 	/**
