@@ -205,7 +205,7 @@ $(document).ready(function () {
 
 		switch( selectedFilter ) {
 		    case FILTER.ALL:
-		    	updateSidebarWithCompanyFilter( model.getResults() );
+		    	updateSidebarWithStateFilter( model.getResults() );
 		    	updateElements( model.getResults() );
 		    	break;
 
