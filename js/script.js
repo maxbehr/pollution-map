@@ -335,7 +335,7 @@ $(document).ready(function () {
 
     		$(li).find('.head').html( '<i class="fa fa-building-o"></i> ' + element.name );
 
-    		var table = $('<table><tr><th>Jahr</th><th>Kompartiment</th><th>Jahresfracht</th><th>versehentlich</th></tr></table>')
+    		var table = $('<table class="table table-bordered table-striped"><tr><th>Jahr</th><th>Kompartiment</th><th>Jahresfracht</th><th>versehentlich</th></tr></table>')
 
     		$(li).find('.detail').html( '<p>Insgesamt gab es <strong>' + substances.length + ' Frachtaustöße</strong> von <strong>'+ f2 +'</strong></p>');
 			$(li).find('.detail').append( table );
