@@ -592,7 +592,7 @@ $(document).ready(function () {
                     iconSize: [40, 43],
                     shadowSize: [41, 41],
                     iconAnchor:   [15, 0],
-                    shadowAnchor: [4, 1]
+                    shadowAnchor: [0, 0]
                 });
                 break;
             case 'Niedersachsen':
@@ -602,7 +602,7 @@ $(document).ready(function () {
                     iconSize: [36, 41],
                     shadowSize: [41, 41],
                     iconAnchor:   [15, 0],
-                    shadowAnchor: [4, 1]
+                    shadowAnchor: [1, 1]
                 });
                 break;
             case 'Nordrhein-Westfalen':
@@ -642,7 +642,7 @@ $(document).ready(function () {
                     iconSize: [36, 40],
                     shadowSize: [41, 41],
                     iconAnchor:   [15, 0],
-                    shadowAnchor: [4, 1]
+                    shadowAnchor: [1, 1]
                 });
                 break;
             case 'Sachsen-Anhalt':
