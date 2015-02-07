@@ -1,5 +1,8 @@
-function Model() {
+var filter1 = "";
+var filter2 = "";
 
+
+function Model() {
 
 	this.results = [];
 
@@ -169,15 +172,24 @@ $(document).ready(function () {
     var model = new Model();
     model.getJsonData( init );
 
-    $('#filter-one').on('change', function() {
+    $("#filterOne").on('click', 'li a', function(){
+    	filter1 = $(this).text();
+
+		$("#filterOne .btn:first-child").text($(this).text());
+		$("#filterOne .btn:first-child").val($(this).text());
+
     	updateFilterTwo();
     	updateSidebar();
-    });
+   	});
 
-    $('#filter-two').on('change', function() {
-		updateSidebar();
-    });
+    $("#filterTwo").on('click', 'li a', function(){
+    	filter2 = $(this).text();
 
+		$("#filterTwo .btn:first-child").text($(this).text());
+		$("#filterTwo .btn:first-child").val($(this).text());
+
+    	updateSidebar();
+   	});
 
     function updateSidebar() {
     	var selectedFilter = getFilterOneText();
@@ -220,7 +232,7 @@ $(document).ready(function () {
 	/**
 	 *	Initializes the entire page.
 	 */
-    function init() {
+    function init( results ) {
     	updateFilterOne();
     	updateFilterTwo();
     	updateSidebar();
@@ -231,14 +243,16 @@ $(document).ready(function () {
 	 *	Updates the substances drop down with all fetched substance names.
 	 */
     function updateFilterOne() {
-
-		var select = $('#filter-one');
+		var select = $('#filterOne').find('ul');
 		$.each(FILTER, function(val, text) {
 
-			select.append(
-		    	$('<option></option>').val(val).html(text)
+			var e = $('<a href="#"></a>').val(val).html(text);
+
+			$(select).append(
+		    	$('<li></li>').append(e)
 			);
 		});
+
 
     }
 
@@ -267,11 +281,14 @@ $(document).ready(function () {
 
 		updateResultHeader( selectedFilter );
 
-		var select = $('#filter-two');
+		var select = $('#filterTwo').find('ul');
 		$(select).empty();
 		$.each(arr, function(val, text) {
-			select.append(
-		    	$('<option></option>').val(val).html(text)
+
+			var e = $('<a href="#"></a>').val(val).html(text);
+
+			$(select).append(
+		    	$('<li></li>').append(e)
 			);
 		});
 
@@ -374,14 +391,14 @@ $(document).ready(function () {
 		Returns the value set in filter one.
      */
     function getFilterOneText() {
-    	return $('#filter-one').find(":selected").text();
+    	return filter1;
     }
 
     /**
 		Returns the value set in filter two.
      */
     function getFilterTwoText() {
-    	return $('#filter-two').find(":selected").text();
+    	return filter2;
     }
 
 

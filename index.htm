@@ -4,20 +4,31 @@
     <meta charset='utf-8'>
 
     <link rel="stylesheet" type="text/css" href="css/style.css"/>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
 </head>
 <body>
 <div id="wrapper">
+
+
     <div id="topbar">
         <div id="substance-block">
             <strong>PollutionMap</strong>
 
 			<span id="filter">
 				Filter:
-				<select id="filter-one"></select>
+				<div id="filterOne" class="btn-group">
+					<button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">Bitte wählen...<span class="caret"></span></button>
+					<ul class="dropdown-menu"></ul>
+				</div>
+
 				<i class="fa fa-arrow-right"></i>
-	            <select id="filter-two"></select>
+
+				<div id="filterTwo"  class="btn-group">
+					<button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">Bitte wählen...<span class="caret"></span></button>
+					<ul class="dropdown-menu scrollable-menu"></ul>
+				</div>
 			</span>
 
         </div>
@@ -43,7 +54,11 @@
 <script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"></script>
 <script type="text/javascript" src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
 <script type="text/javascript" src="js/leaflet.js"></script>
+
 <script type="text/javascript" src="js/script.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+
+
 <script type="text/javascript">
     //<![CDATA[
     var map;
