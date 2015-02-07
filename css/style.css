@@ -543,6 +543,11 @@ a:hover {
 	margin-left: 30px;
 }
 
+/* Hide these two from the beginning */
+#filterTwo, .fa-arrow-right {
+	display: none;
+}
+
 #filterTwo .scrollable-menu {
     height: auto;
     max-height: 700px;

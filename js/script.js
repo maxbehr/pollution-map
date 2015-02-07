@@ -159,6 +159,7 @@ function Model() {
 }
 
 var FILTER = {
+	ALL : "Alle",
 	STATE : "Bundesland",
 	SUBSTANCE : "Stoff",
 	COMPANY : "Unternehmen"
@@ -172,11 +173,16 @@ $(document).ready(function () {
     var model = new Model();
     model.getJsonData( init );
 
+    $('#filterTwo').hide();
+    $('.fa-arrow-right').hide();
+
     $("#filterOne").on('click', 'li a', function(){
     	filter1 = $(this).text();
 
 		$("#filterOne .btn:first-child").text($(this).text());
 		$("#filterOne .btn:first-child").val($(this).text());
+
+		showFilterTwo( filter1 != FILTER.ALL );
 
     	updateFilterTwo();
     	updateSidebar();
@@ -198,6 +204,11 @@ $(document).ready(function () {
 		var arr = [];
 
 		switch( selectedFilter ) {
+		    case FILTER.ALL:
+		    	updateSidebarWithCompanyFilter( model.getResults() );
+		    	updateElements( model.getResults() );
+		    	break;
+
 		    case FILTER.STATE:
 
 		    	var elements = model.findCompaniesInState( selectedFilter2 );
@@ -274,6 +285,19 @@ $(document).ready(function () {
 			);
 		});
 
+    }
+
+    /**
+		Toggle visibility of Filter 2.
+    */
+    function showFilterTwo( show ) {
+    	if ( show ) {
+    		$('.fa-arrow-right').fadeIn(500);
+    		$('#filterTwo').fadeIn(500).css('display', 'inline-block');
+    	} else {
+    		$('.fa-arrow-right').fadeOut(500);
+    		$('#filterTwo').fadeOut(500);
+    	}
     }
 
     /**
