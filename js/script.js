@@ -414,6 +414,8 @@ $(document).ready(function () {
     	$('#sidebar p#resultText').html( text );
     }
 
+    var sidebar = $('#sidebar');
+
     function markerEnter() {
         hoverId = this.id;
         if (!clickedMarker) {
@@ -421,7 +423,8 @@ $(document).ready(function () {
             $("#results #" + hoverId + ' .detail').addClass('active');
             clearTimeout(timeout);
             timeout = setTimeout(function() {
-                $('#sidebar').scrollTo('#'+hoverId, {duration:300, offset:-15});
+                var hoverElem = $('#'+hoverId);
+                sidebar.animate({scrollTop: (sidebar.scrollTop() + hoverElem.offset().top - (hoverElem.height() + 50)) },300);
             }, 500);
         }
     }
@@ -429,6 +432,7 @@ $(document).ready(function () {
         if (!clickedMarker) {
             markers[hoverId].closePopup();
             $("#results #" + hoverId + ' .detail').removeClass('active');
+            clearTimeout(timeout);
             hoverId = null;
         }
     }
@@ -448,7 +452,8 @@ $(document).ready(function () {
             $("#results #" + currentId).addClass('clicked');
             clickedMarker = currentId;
             timeout = setTimeout(function() {
-                $('#sidebar').scrollTo('#'+clickedMarker, {duration:300, offset:-15});
+                var clickedElem = $("#" + clickedMarker);
+                sidebar.animate({scrollTop: (sidebar.scrollTop() + clickedElem.offset().top - (clickedElem.height() + 50)) },300);
             }, 500);
         }
     }

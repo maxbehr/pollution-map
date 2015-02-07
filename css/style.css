@@ -592,7 +592,7 @@ html, body {
 	color: #1e1e1e;
 	display: block;
 	background-color: #efefef;
-    padding: 10px;
+    padding: 0;
     max-height: 0;
     transition: max-height 0.8s;
     overflow: hidden;
@@ -606,6 +606,7 @@ html, body {
 #sidebar #resultText .detail.active {
     max-height: 200px;
     transition: max-height 0.8s;
+    padding: 10px;
 }
 
 #sidebar #resultText ul {
