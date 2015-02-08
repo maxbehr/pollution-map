@@ -608,7 +608,7 @@ a:hover {
     overflow-y: scroll;
     visibility: visible;
 }
-#sidebar #resultText .detail table {
+#sidebar #resultText table {
 	font-size: 0.8em;
 }
 
@@ -637,6 +637,11 @@ a:hover {
 #sidebar #resultText li.clicked {
     background-color: rgba(200, 255, 150, 0.7);
     transition: background-color 0.4s;
+}
+
+#sidebar #resultText li canvas {
+	display: block;
+	margin: 0 auto;
 }
 
 #wrapper {

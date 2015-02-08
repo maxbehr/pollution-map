@@ -115,9 +115,18 @@ function Model() {
 
     	var substances = [];
 
+    	var id = 0;
     	$.each( this.results, function (index_element, element) {
     		if( element.name !== null && element.name.trim() !== "" && element.name === company ) {
-    			substances.push( element );
+    			/*
+		    	$.each( element.fracht, function (index_fracht, fracht) {
+		    		fracht.id = id;
+		    		id++;
+		    		substances.push( fracht );
+		    	});
+				*/
+
+		    	substances.push( element );
     		}
 
     	});
@@ -156,7 +165,31 @@ function Model() {
     	return substances;
     }
 
+    this.getUniqueSubstanceArray = function( element ) {
+    	var substance_arr = {};
+   		var color_index = 0;
+    	$.each(element.fracht, function( index, value ) {
+    		substance_arr[ value.stoff_name ] = {};
+    		substance_arr[ value.stoff_name ]['stoff_name'] = value.stoff_name;
+
+    		substance_arr[ value.stoff_name ]['color'] = CHART_COLORS[color_index];
+    		substance_arr[ value.stoff_name ]['highlight_color'] = CHART_COLORS[color_index];
+
+    		substance_arr[ value.stoff_name ]['fracht'] = 0;
+    		substance_arr[ value.stoff_name ]['fracht'] += parseInt( value.jahresfracht );
+
+    		color_index++;
+    		if( color_index > CHART_COLORS.length) {
+    			color_index = 0;
+    		}
+    	});
+
+    	return substance_arr;
+    }
+
 }
+
+var CHART_COLORS = ['#F8A09D', '#EA67A9', '#84EDBD', '#2D96A2', '#8288A7', '#C2002B', '#3C7A33', '#6B6BC7', '#DDEE85', '#786AD7', '#89EDA9', '#5051B6', '#B9ACE2', '#322666', '#6CE392', '#ACDCEC', '#818278', '#925716', '#316251', '#D6B5A3', '#057F27', '#010B2E'];
 
 var FILTER = {
 	ALL : "Alle",
@@ -167,6 +200,11 @@ var FILTER = {
 
 
 $(document).ready(function () {
+
+	for( var i = 0; i < 30; i++) {
+		console.log(getRandomColor());
+	}
+
 
     drawmap();
 
@@ -323,6 +361,7 @@ $(document).ready(function () {
 
     }
 
+
     /**
 		Updates the sidebar when the substance filter is set.
      */
@@ -357,6 +396,12 @@ $(document).ready(function () {
 
     		$(li).find('.detail').append( '<p><strong>Ausstoß insgesamt:</strong> ' + jahresfrachtGesamt + ' kg/a</p>');
 
+    		/*
+				Diagram
+    		 */
+			var canvas = createChartForSubstance( substances );
+			$(li).append(canvas);
+
 			$(t).append(li);
 
     	});
@@ -371,27 +416,69 @@ $(document).ready(function () {
     function updateSidebarWithCompanyFilter( elements ) {
     	var f2 = getFilterTwoText();
 
-    	updateResultDescription( 'Das Unternehmen <strong>'+ f2 +'</strong> hat folgende Schadstoffe ausgestoßen:' );
+    	updateResultDescription( '<strong>'+ f2 +'</strong> hat folgende Schadstoffe ausgestoßen:' );
 
     	var t = $('<ul id="results"></ul>');
     	//	Loop through elements
     	$.each( elements, function( index, element ) {
-    		$.each( element.fracht, function( index2, fracht ) {
-	    		var li = createListItem(element.id);
-	    		$(li).find('.head').html( '<i class="fa fa-chain-broken"></i> ' + fracht.stoff_name );
-	    		$(li).find('.detail').html( '<p><strong>'+ fracht.jahr +'</strong> wurden <strong>'+ fracht.jahresfracht +'</strong> kg/a ausgestoßen. Davon waren <strong>'+ fracht.jahresfracht_versehentlich +'</strong> kg/a versehentlich.</p>' );
+			var li = createListItem(element.id);
 
-	    		$(t).append(li);
-    		});
+
+			var frachten = model.getUniqueSubstanceArray( element );
+
+			var table = $('<table class="table table-bordered table-striped"><tr><th>Stoff</th><th>Ausstoß insgesamt</th></tr></table>')
+
+			$.each( frachten, function(key, val) {
+				var row = $('<tr><td>'+ val['stoff_name'] +'</td><td>'+ val['fracht'] +'</td></tr>');
+
+				$(table).append(row);
+			});
+
+			$(li).html(table);
+
+    		$(t).append(li);
     	});
 
     	updateResultText( t );
+    }
+
+    function createChartForSubstance( frachten ) {
+
+		var data = [];
+
+		var colorIndex = 0;
+		$.each( frachten, function( key, val ) {
+			var d = {
+				value: parseInt( val['jahresfracht'] ),
+		        color: CHART_COLORS[colorIndex],
+		        highlight: CHART_COLORS[colorIndex],
+		        label: val['jahr']
+			};
+			colorIndex++;
+
+			data.push(d);
+		});
+
+		var canvas = $('<canvas id="myChart" width="390" height="200"></canvas>');
+		var ctx = $(canvas)[0].getContext('2d');
+		var myNewChart = new Chart(ctx).Doughnut(data, { animateRotate: true });
+
+		return canvas;
     }
 
     function createListItem(id) {
     	var li = $('<li id="' + id + '"></li>').html('<div class="head"></div><div class="detail"></div>');
     	return li;
     }
+
+	function getRandomColor() {
+	    var letters = '0123456789ABCDEF'.split('');
+	    var color = '#';
+	    for (var i = 0; i < 6; i++ ) {
+	        color += letters[Math.floor(Math.random() * 16)];
+	    }
+	    return color;
+	}
 
     /**
 		Returns the value set in filter one.
