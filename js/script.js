@@ -365,13 +365,34 @@ $(document).ready(function () {
         $.each(elements, function (index, element) {
             var li = createListItem(element.id);
             $(li).find('.head').html('<i class="fa fa-building-o"></i> ' + element.name);
-            $(li).find('.detail').html('<p>' + element.fracht.length + ' ausgestoßene Stoffe</p><p>' + element.anschrift + ', ' + element.bundesland + '</p>');
+
+            $(li).find('.detail').prepend('<p>' + element.anschrift + ', ' + element.bundesland + '</p>');
+
+            $(li).find('.detail').append('<p><strong>Freisetzungen in den Jahren 2007 bis 2012:</strong></p>');
+
+            var table = createTableWithEmissions( element );
+            $(li).find('.detail').append( table );
 
             $(t).append(li);
         });
 
         updateResultText(t);
 
+    }
+
+    function createTableWithEmissions( element ) {
+        var frachten = model.getUniqueSubstanceArray(element);
+
+        var table = $('<table class="table table-bordered table-striped"><tr><th>Stoff</th><th>Ausstoß insgesamt</th></tr></table>')
+
+        $.each(frachten, function (key, val) {
+            var fracht = val['fracht'] / 1000;
+            var row = $('<tr><td>' + val['stoff_name'] + '</td><td>' + fracht + ' t/a</td></tr>');
+
+            $(table).append(row);
+        });
+
+        return table;
     }
 
 
@@ -399,7 +420,8 @@ $(document).ready(function () {
 
             var table = $('<table class="table table-bordered table-striped"><tr><th>Jahr</th><th>Kompartiment</th><th>Jahresfracht</th><th>versehentlich</th></tr></table>')
 
-            $(li).find('.detail').html('<p>Insgesamt gab es <strong>' + substances.length + ' Frachtaustöße</strong> von <strong>' + f2 + '</strong></p>');
+            var ausstoss = ( substances.length > 1 ) ? 'Frachtaustöße' : 'Frachtaustoß';
+            $(li).find('.detail').html('<p>Insgesamt gab es <strong>' + substances.length + ' ' + ausstoss + '</strong> von <strong>' + f2 + '</strong></p>');
             $(li).find('.detail').append(table);
 
 
@@ -416,8 +438,18 @@ $(document).ready(function () {
             /*
              Diagram
              */
-            var canvas = createChartForSubstance(substances);
-            $(li).append(canvas);
+            //	Is at least one substance emission >1
+            var unicorn = false;
+            $.each( substances, function( index, val ) {
+                console.log(val);
+                if( val.jahresfracht != null && parseInt(val.jahresfracht) >= 1 )
+                    unicorn = true;
+            });
+
+            if( unicorn ) {
+                var canvas = createChartForSubstance(substances);
+                $(li).append(canvas);
+            }
 
             $(t).append(li);
 
@@ -444,17 +476,7 @@ $(document).ready(function () {
         $.each(elements, function (index, element) {
             var li = createListItem(element.id);
 
-
-            var frachten = model.getUniqueSubstanceArray(element);
-
-            var table = $('<table class="table table-bordered table-striped"><tr><th>Stoff</th><th>Ausstoß insgesamt</th></tr></table>')
-
-            $.each(frachten, function (key, val) {
-                var row = $('<tr><td>' + val['stoff_name'] + '</td><td>' + val['fracht'] + '</td></tr>');
-
-                $(table).append(row);
-            });
-
+            var table = createTableWithEmissions( element );
             $(li).html(table);
 
             $(t).append(li);
@@ -490,15 +512,6 @@ $(document).ready(function () {
     function createListItem(id) {
         var li = $('<li id="' + id + '"></li>').html('<div class="head"></div><div class="detail"></div>');
         return li;
-    }
-
-    function getRandomColor() {
-        var letters = '0123456789ABCDEF'.split('');
-        var color = '#';
-        for (var i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
     }
 
     /**
