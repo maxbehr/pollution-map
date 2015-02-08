@@ -287,6 +287,7 @@ $(document).ready(function () {
     	// updateElements( model.getResults() );
     }
 
+
 	/**
 	 *	Updates the company drop down with all fetched company names.
 	 */
@@ -551,8 +552,8 @@ $(document).ready(function () {
         }
     }
 
-    function updateElements( results ){
-        markers = [];
+    function updateElements(results){
+        clearResults();
         $.each(results, function (index_element, element) {
             var currentMarker = L.marker([element.wgs84_y, element.wgs84_x], {icon: getIcon(element.bundesland)});
             currentMarker.addTo(map);
@@ -774,6 +775,18 @@ $(document).ready(function () {
                 break;
         }
         return icon;
+    }
+
+    function clearResults() {
+        if (markers.length > 0) {
+            $.each(markers, function (index, marker) {
+                if (marker != undefined) {
+                    map.removeLayer(marker);
+                }
+            });
+            markers = [];
+        }
+
     }
 });
 
