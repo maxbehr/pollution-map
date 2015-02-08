@@ -569,7 +569,7 @@ a:hover {
 }
 
 #descBox h1 {
-    line-height: 15px;
+    line-height: 0;
     font-weight: bold;
     font-size: 24px;
 }
