@@ -13,7 +13,7 @@ function Model() {
             url: "http://www.maxbehr.de/opendata/dataset.php?callback=?",
             dataType: "jsonp",
             data: {
-                limit: 100
+                limit: 5000
             },
             success: function (data) {
                 $.each(data, function (index_element, element) {
@@ -783,7 +783,7 @@ $(document).ready(function () {
                     shadowAnchor: [4, 1]
                 });
                 break;
-            case 'Thürigen':
+            case 'Thüringen':
                 icon = L.icon({
                     iconUrl: 'js/images/th.png',
                     shadowUrl: 'js/images/marker-shadow.png',
