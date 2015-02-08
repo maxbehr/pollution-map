@@ -518,6 +518,7 @@ $(document).ready(function () {
         if (!clickedMarker) {
             markers[hoverId].openPopup();
             $("#results #" + hoverId + ' .detail').addClass('active');
+            $("#results #" + hoverId).addClass('hovering');
             clearTimeout(timeout);
             timeout = setTimeout(function() {
                 var hoverElem = $('#'+hoverId);
@@ -529,6 +530,7 @@ $(document).ready(function () {
         if (!clickedMarker) {
             markers[hoverId].closePopup();
             $("#results #" + hoverId + ' .detail').removeClass('active');
+            $("#results #" + hoverId).removeClass('hovering');
             clearTimeout(timeout);
             hoverId = null;
         }
@@ -538,11 +540,12 @@ $(document).ready(function () {
         var currentId = this.id;
         if (currentId == clickedMarker) {
             $("#results #" + clickedMarker).removeClass('clicked');
+            $("#results #" + clickedMarker).addClass('hovering');
             clickedMarker = null;
         } else {
             if (clickedMarker) {
                 $("#results #" + clickedMarker + ' .detail').removeClass('active');
-                $("#results #" + clickedMarker).removeClass('clicked');
+                $("#results #" + clickedMarker).removeClass('clicked hovering');
             }
             markers[currentId].openPopup();
             $("#results #" + currentId + ' .detail').addClass('active');
@@ -573,6 +576,7 @@ $(document).ready(function () {
                 if (!clickedMarker) {
                     markers[hoverId].openPopup();
                     $("#results #" + hoverId + ' .detail').addClass('active');
+                    $("#results #" + hoverId).addClass('hovering');
                 }
         });
 
@@ -580,6 +584,7 @@ $(document).ready(function () {
             if (!clickedMarker) {
                 markers[hoverId].closePopup();
                 $("#results #" + hoverId + ' .detail').removeClass('active');
+                $("#results #" + hoverId).removeClass('hovering');
                 hoverId = null;
             }
         });
@@ -589,15 +594,16 @@ $(document).ready(function () {
             var currentId = $(this).attr('id');
             if (currentId == clickedMarker) {
                 $("#results #" + clickedMarker).removeClass('clicked');
+                $("#results #" + clickedMarker).addClass('hovering');
                 clickedMarker = null;
             } else {
                 if (clickedMarker) {
                     $("#results #" + clickedMarker + ' .detail').removeClass('active');
-                    $("#results #" + clickedMarker).removeClass('clicked');
+                    $("#results #" + clickedMarker).removeClass('clicked hovering');
                 }
                 markers[currentId].openPopup();
                 $("#results #" + currentId + ' .detail').addClass('active');
-                $("#results #" + currentId).addClass('clicked');
+                $("#results #" + currentId).addClass('clicked hovering');
                 clickedMarker = currentId;
             }
         });
