@@ -220,7 +220,10 @@ $(document).ready(function () {
 		$("#filterOne .btn:first-child").text($(this).text());
 		$("#filterOne .btn:first-child").val($(this).text());
 
-		showFilterTwo( filter1 != FILTER.ALL );
+		showFilterTwo(filter1 != FILTER.ALL);
+
+        $("#filterTwo .btn:first-child").text('Filter wählen...');
+        $("#filterTwo .btn:first-child").val('');
 
     	updateFilterTwo();
     	updateSidebar();
@@ -330,7 +333,7 @@ $(document).ready(function () {
 		Toggle visibility of Filter 2.
     */
     function showFilterTwo( show ) {
-    	if ( show ) {
+    	if (show) {
     		$('.fa-arrow-right').fadeIn(500);
     		$('#filterTwo').fadeIn(500).css('display', 'inline-block');
     	} else {
