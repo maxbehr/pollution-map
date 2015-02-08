@@ -13,7 +13,7 @@ function Model() {
             url: "http://www.maxbehr.de/opendata/dataset.php?callback=?",
             dataType: "jsonp",
             data: {
-                limit: 5000
+                limit: 10000
             },
             success: function (data) {
                 $.each(data, function (index_element, element) {
@@ -539,7 +539,7 @@ $(document).ready(function () {
             clearTimeout(timeout);
             timeout = setTimeout(function () {
                 var hoverElem = $('#' + hoverId);
-                sidebar.animate({scrollTop: (sidebar.scrollTop() + hoverElem.offset().top - (hoverElem.height() + 60))}, 300);
+                sidebar.animate({scrollTop: (sidebar.scrollTop() + hoverElem.offset().top - (hoverElem.height() + 80))}, 300);
             }, 500);
         }
     }
@@ -571,7 +571,7 @@ $(document).ready(function () {
             clickedMarker = currentId;
             timeout = setTimeout(function () {
                 var clickedElem = $("#" + clickedMarker);
-                sidebar.animate({scrollTop: (sidebar.scrollTop() + clickedElem.offset().top - (clickedElem.height() + 60))}, 300);
+                sidebar.animate({scrollTop: (sidebar.scrollTop() + clickedElem.offset().top - (clickedElem.height() + 80))}, 300);
             }, 600);
         }
     }
@@ -581,7 +581,7 @@ $(document).ready(function () {
         $.each(results, function (index_element, element) {
             var currentMarker = L.marker([element.wgs84_y, element.wgs84_x], {icon: getIcon(element.bundesland)});
             currentMarker.addTo(map);
-            currentMarker.bindPopup("<b>Hello world!</b><br>I am a popup.", {
+            currentMarker.bindPopup("<b>"+element.name+"</b><br>"+element.anschrift, {
                 offset: new L.Point(0, -20),
                 closeButton: false
             });
