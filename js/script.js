@@ -202,12 +202,6 @@ var FILTER = {
 
 
 $(document).ready(function () {
-
-    for (var i = 0; i < 30; i++) {
-        console.log(getRandomColor());
-    }
-
-
     drawmap();
 
     var model = new Model();
