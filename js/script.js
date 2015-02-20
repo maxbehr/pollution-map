@@ -10,8 +10,8 @@ function Model() {
         var that = this;
 
         var request = $.ajax({
-            url: "http://www.maxbehr.de/opendata/dataset.php?callback=?",
-            dataType: "jsonp",
+            url: "http://maxbehr.github.com/pollution-map/data/dataset.json",
+            dataType: "json",
             data: {
                 limit: 10000
             },
