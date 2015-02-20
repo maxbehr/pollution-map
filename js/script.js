@@ -440,7 +440,7 @@ $(document).ready(function () {
                     unicorn = true;
             });
 
-            if( unicorn ) {
+            if( unicorn && substances.length > 1 ) {
                 var canvas = createChartForSubstance(substances);
                 $(li).append(canvas);
             }
