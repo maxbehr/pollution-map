@@ -10,8 +10,8 @@ function Model() {
         var that = this;
 
         var request = $.ajax({
-            url: "http://maxbehr.github.com/pollution-map/data/dataset.json",
-            dataType: "jsonp",
+            url: "data/dataset.json",
+            dataType: "json",
             data: {
                 limit: 10000
             },
