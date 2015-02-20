@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+
+</head>
+<body>
+<div id="wrapper">
+
+
+    <div id="topbar">
+        <div id="substance-block">
+            <strong>PollutionMap</strong>
+
+			<span id="filter">
+				Filter:
+				<div id="filterOne" class="btn-group">
+					<button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">Alle Ergebnisse</button>
+					<ul class="dropdown-menu">
+						<li><a href="#">Alle Ergebnisse</a></li>
+						<li class="divider"></li>
+						<li><a href="#">Stoff</a></li>
+						<li><a href="#">Bundesland</a></li>
+						<li><a href="#">Unternehmen</a></li>
+					</ul>
+				</div>
+
+				<i class="fa fa-arrow-right"></i>
+
+				<div id="filterTwo"  class="btn-group">
+					<button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">Filter wählen...<span class="caret"></span></button>
+					<ul class="dropdown-menu scrollable-menu"></ul>
+				</div>
+			</span>
+
+        </div>
+    </div>
+
+    <div id="map"></div>
+
+    <div id="descBox">
+        <h1 id="resultHeader">Header</h1>
+        <p id="resultDesc">Description</p>
+    </div>
+    <div id="sidebar">
+		<p id="resultText">Text</p>
+    </div>
+
+    <div id="osm">&copy;<a href="http://www.openstreetmap.org">OpenStreetMap</a> und
+        <a href="http://www.openstreetmap.org/copyright">Mitwirkende</a>,
+        <a href="http://creativecommons.org/licenses/by-sa/2.0/deed.de">CC-BY-SA</a>
+    </div>
+
+</div>
+<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"></script>
+<script type="text/javascript" src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
+<script type="text/javascript" src="js/leaflet.js"></script>
+<script type="text/javascript" src="js/Chart.min.js"></script>
+
+<script type="text/javascript" src="js/script.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+
+
+<script type="text/javascript">
+    //<![CDATA[
+    var map;
+    var markers = [];
+    var clickedMarker;
+    var hoverId;
+    var timeout;
+    var results = [];
+
+    function drawmap() {
+        map = new L.Map('map', {closePopupOnClick:false});
+        var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+        var osm = new L.TileLayer(osmUrl, {minZoom: 6, attribution: osmAttrib});
+
+        map.setView(new L.LatLng(51.5, 10.8),7);
+        map.addLayer(osm);
+    }
+
+
+    //]]>
+</script>
+</body>
+</html>
