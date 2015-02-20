@@ -481,24 +481,36 @@ $(document).ready(function () {
 
     function createChartForSubstance(frachten) {
 
-        var data = [];
+        var labels = [];
+        var valueData = [];
 
-        var colorIndex = 0;
+        var kompartiment = "";
+
         $.each(frachten, function (key, val) {
-            var d = {
-                value: parseInt(val['jahresfracht']),
-                color: CHART_COLORS[colorIndex],
-                highlight: CHART_COLORS[colorIndex],
-                label: val['jahr']
-            };
-            colorIndex++;
+            kompartiment = val['stoff_name'];
+            labels.push( val['jahr'] );
 
-            data.push(d);
+            var fracht = (val['jahresfracht'] != null && !isNaN(val['jahresfracht'])) ? parseInt(val['jahresfracht']) : null;
+            valueData.push( fracht );
         });
+
+        var data = {
+            labels: labels,
+            datasets: [
+                {
+                    label: kompartiment,
+                    fillColor: "rgba(220,0,0,0.7)",
+                    strokeColor: "rgba(220,220,220,0.8)",
+                    highlightFill: "rgba(220,0,0,0.9)",
+                    highlightStroke: "rgba(220,220,220,1)",
+                    data: valueData
+                }
+            ]
+        };
 
         var canvas = $('<canvas id="myChart" width="390" height="200"></canvas>');
         var ctx = $(canvas)[0].getContext('2d');
-        var myNewChart = new Chart(ctx).Doughnut(data, {animateRotate: true});
+        var myNewChart = new Chart(ctx).Bar(data, {animation : false});
 
         return canvas;
     }
