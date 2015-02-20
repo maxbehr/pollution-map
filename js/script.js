@@ -23,7 +23,8 @@ function Model() {
 
                 setTimeout(function () {
                     callback(that.getResults());
-                    $('#filterOne ul li:first a').trigger('click');
+                    $('#filterOne ul li:nth-child(3) a').trigger('click');
+                    $('#filterTwo ul li:nth-child(2) a').trigger('click');
                 }, 500);
             }
         });
